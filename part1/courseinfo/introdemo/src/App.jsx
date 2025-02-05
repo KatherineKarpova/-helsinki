@@ -1,34 +1,53 @@
 const App = () => {
-  const course = 'Half Stack application development'
-  const parts = [
-    {
-      name: 'Fundamentals of React',
-      exercises: 10
-    },
-    {
-      name: 'Using props to pass data',
-      exercises: 7
-    },
-    {
-      name: 'State of a component',
-      exercises: 14
+    const course = {
+      name: 'Half Stack application development',
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7
+        },
+        {
+          name: 'State of a component',
+          exercises: 14
+        }
+      ]
     }
-  ]
-  const content = parts.map((part, index) => (
-    <p key={index}>
-      {part.name} {part.exercises}
-    </p>
-  ));
-  
-  const total = parts.reduce((sum, part) => sum + part.exercises, 0);
 
-  return (
-    <div>
-      <h1>{course}</h1>
-      <p>{content}</p>
-      <p>Total number of exercises {total}</p>
-    </div>
-  )
-}
+  const Header = () => {
+    return (
+      <h1>{course.name}</h1>
+    )
+  }
+  const Content = () => {
+     return (
+        <p>
+          {course.parts.map(part => (
+          <p key={part.name}>{part.name} {part.exercises} </p>
+          ))}
+        </p>
+
+     )
+  }
+
+    const Total = () => {
+      return (
+        <p>
+          Total number of exercises {course.parts.reduce((sum, part) => sum + part.exercises, 0)}
+        </p>
+      )
+    }
+
+    return (
+      <div>
+      <Header/>
+      <Content/>
+      <Total/>
+      </div>
+    )
+  }
 
 export default App
