@@ -5,6 +5,11 @@ const Button = ({ onClick, text }) => (
   <button onClick={onClick}>{text}</button>
 )
 
+const voteTotal = ({ value }) => {
+  <p>has {value} votes</p>
+}
+
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -18,8 +23,11 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  // make votes array equal to anecdotes
+  // start each vote as equal to 0
+  const [votes, setVotes] = useState(Array.from({ length: anecdotes.length }, () => 0))
 
-  const Anecdote = () => <p>{anecdotes[selected]}</p>
+  const Anecdote = () => <h1>{anecdotes[selected]}</h1>
   // change state of selected based on a random number 
   // that corresponds with the list items
 
@@ -31,14 +39,29 @@ const App = () => {
   }
 
   const nextSelected = () => {
+    // get different index num
     const newSelected = getRandomNum({exclude: selected})
     console.log(newSelected)
+    // set selected to the new num
     setSelected(newSelected)
   }
+  // change num of votes depending on button press
+  const handleVote = () => {
+    // Copy the votes array and increment the vote count for the selected index
+    const newVotes = [...votes];
+
+    newVotes[selected] += 1; // Increment the vote for the given index
+        // Log the updated vote count for the selected anecdote
+        console.log(`Vote for ${anecdotes[selected]}: ${newVotes[selected]}`);
+    setVotes(newVotes); // Update state with the new array
+  };
+
   return (
     <div>
       <Anecdote/>
+      <Button onClick={handleVote} text='vote'/>
       <Button onClick={nextSelected} text='next anecdote'/>
+      <voteTotal value={votes[selected]}/>
     </div>
   )
 }
