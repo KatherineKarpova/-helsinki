@@ -88,6 +88,7 @@ const App = () => {
       <Anecdote value={mostVotedAnecdote}/>
       <TotalVotes value={mostVotes}/>
     </div>
+    
   )
 }
 
