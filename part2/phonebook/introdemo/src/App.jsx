@@ -12,15 +12,26 @@ const App = () => {
     setNewName(event.target.value)
   }
 
+  // add new name to the persons array
+  // copy the array first do not change it directly
   const addNewName = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
+    // create new name as a seperate object to check and set
     const nameObject = {
       name: newName,
     }
-    // copy array with new object appended to this copy
-    setPersons(persons.concat(nameObject))
-    // reset to the default before event handler 
+    // check if the new name is already in the persons array
+    const nameExists = persons.some(person => person.name === newName)
+    // alert message to user if true/match found
+    if (nameExists) {
+      alert(`${newName} is already added to phonebook`)
+    }
+    else {
+      // copy array and append new name if false
+      setPersons(persons.concat(nameObject))
+    }
+    // reset to the default before event handler
     setNewName('')
   }
 
@@ -33,8 +44,6 @@ const App = () => {
           value={newName}
           onChange={handleNewName}
           />
-        </div>
-        <div>debug: {newName}
         </div>
         <div>
           <button type="submit">add</button>
