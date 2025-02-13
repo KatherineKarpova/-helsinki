@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import Person from './components/Person'
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -8,17 +10,22 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ])
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  // Combined state for both name and number
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' })
 
-  const handleNewName = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
+  const [search, setSearch] = useState('')
 
-  const handleNewNumber = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
+  // whenn input fields in person forms are submitted,
+  // set values to the newPerson object
+  const handleNewPerson = (event) => {
+    // get value in input field based on the input name
+    const {name, value} = event.target
+    console.log(event.target);
+    
+    setNewPerson({
+      ...newPerson,
+      [name]: value
+    })
   }
 
   // add new name to the persons array
@@ -28,44 +35,45 @@ const App = () => {
     console.log('button clicked', event.target)
     // create new name as a seperate object to check and set
     const personObject = {
-      name: newName,
-      number: newNumber,
+      name: newPerson.name,
+      number: newPerson.number,
       id: persons.length + 1,
     }
     console.log('new id:', personObject.id)
     // check if the new name is already in the persons array
-    const nameExists = persons.some(person => person.name === newName)
     // alert message to user if true/match found
-    if (nameExists) {
-      alert(`${newName} is already added to phonebook`)
+    if (persons.some(person => person.name === newPerson.name)) {
+      alert(`${newPerson.name} is already added to phonebook`)
     }
     else {
       // copy array and append new name if false
       setPersons(persons.concat(personObject))
     }
     // reset to the default before event handler
-    setNewName('')
-    setNewNumber('')
+    setNewPerson({ name: '', number: '' })
   }
+
+  const handleSearch = (event) => {
+    console.log(event.target.value)
+    setSearch(event.target.value)
+  }
+  // regexp approach to search for consecutive letters case insensitive
+  const filteredPersons = persons.filter(person =>
+    new RegExp(`^${search}`, 'i').test(person.name)
+  )
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addNewPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNewName}/>
-        </div>
-        <div>number: <input value={newNumber} onChange={handleNewNumber}/></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {persons.map(person => 
-        <Person key={person.id} person={person}/>
-        )}
-      </div>
+      <Filter value={search} onChange={handleSearch}/>
+      <h3>Add a new</h3>
+      <PersonForm
+      state={newPerson}
+      onChange={handleNewPerson}
+      onSubmit={addNewPerson}
+      />
+      <h3>Numbers</h3>
+      <Persons array={search ? filteredPersons : persons}/>
     </div>
   )
 }
