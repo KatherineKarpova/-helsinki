@@ -3,12 +3,17 @@ import axios from 'axios'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
 
+  // Combined state for both name and number
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' })
+
+  const [search, setSearch] = useState('')
   //fetch data from json server using fetch method
-  const getPersonsData = () => {
+  /* const getPersonsData = () => {
     console.log('effect')
     axios
       .get('http://localhost:3001/persons')
@@ -18,13 +23,40 @@ const App = () => {
       })
   }
 
-  useEffect(getPersonsData, [])
+  useEffect(getPersonsData, [])*/
 
+  useEffect(() => {
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons)
+      console.log('initial persons data fetched')
+    })
+  }, [])
 
-  // Combined state for both name and number
-  const [newPerson, setNewPerson] = useState({ name: '', number: '' })
+  // add new name to the persons array
+  // copy the array first do not change it directly
+  const addNewPerson = (event) => {
+    event.preventDefault()
+    console.log('button clicked', event.target)
+    // create new name as a seperate object to check and set
+    const personObject = {
+      name: newPerson.name,
+      number: newPerson.number,
+    }
+    // check if the new name is already in the persons array
+    // alert message to user if true/match found
+    if (persons.some(person => person.name === newPerson.name)) {
+      alert(`${newPerson.name} is already added to phonebook`)
+    }
+    else {
+      // if false copy array and append new name in backend
+      personService.create(personObject).then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        // reset to the default before event handler
+        setNewPerson({ name: '', number: '' })
+      })
+    }
+  }
 
-  const [search, setSearch] = useState('')
 
   // whenn input fields in person forms are submitted,
   // set values to the newPerson object
@@ -37,31 +69,6 @@ const App = () => {
       ...newPerson,
       [name]: value
     })
-  }
-
-  // add new name to the persons array
-  // copy the array first do not change it directly
-  const addNewPerson = (event) => {
-    event.preventDefault()
-    console.log('button clicked', event.target)
-    // create new name as a seperate object to check and set
-    const personObject = {
-      name: newPerson.name,
-      number: newPerson.number,
-      id: persons.length + 1,
-    }
-    console.log('new id:', personObject.id)
-    // check if the new name is already in the persons array
-    // alert message to user if true/match found
-    if (persons.some(person => person.name === newPerson.name)) {
-      alert(`${newPerson.name} is already added to phonebook`)
-    }
-    else {
-      // copy array and append new name if false
-      setPersons(persons.concat(personObject))
-    }
-    // reset to the default before event handler
-    setNewPerson({ name: '', number: '' })
   }
 
   const handleSearch = (event) => {
