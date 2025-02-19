@@ -6,25 +6,12 @@ import Filter from './components/Filter'
 import personService from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([])
 
+  const [persons, setPersons] = useState([])
   // Combined state for both name and number
   const [newPerson, setNewPerson] = useState({ name: '', number: '' })
-
   const [search, setSearch] = useState('')
-  //fetch data from json server using fetch method
-  /* const getPersonsData = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
-  }
-
-  useEffect(getPersonsData, [])*/
-
+  //fetch data from json server when persons[] changes
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
       setPersons(initialPersons)
@@ -53,10 +40,20 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         // reset to the default before event handler
         setNewPerson({ name: '', number: '' })
+        console.log('person added!')
       })
     }
   }
 
+  const deletePerson = (id) => {
+    const person = persons.find((p) => p.id === id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id))
+      })
+      console.log('person deleted!')
+    }
+  }
 
   // whenn input fields in person forms are submitted,
   // set values to the newPerson object
@@ -91,7 +88,7 @@ const App = () => {
       onSubmit={addNewPerson}
       />
       <h3>Numbers</h3>
-      <Persons array={search ? filteredPersons : persons}/>
+      <Persons array={search ? filteredPersons : persons} deletePerson={deletePerson}/>
     </div>
   )
 }
