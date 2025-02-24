@@ -32,7 +32,12 @@ const App = () => {
     // check if the new name is already in the persons array
     // alert message to user if true/match found
     if (persons.some(person => person.name === newPerson.name)) {
-      alert(`${newPerson.name} is already added to phonebook`)
+      if (window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const oldPerson = persons.find(person => person.name === newPerson.name)
+        personService.update(oldPerson.id, personObject).then((returnedPerson) => {
+          setPersons(persons.map((person) => (person.id === oldPerson.id ? returnedPerson : person)))
+        })
+      }
     }
     else {
       // if false copy array and append new name in backend
@@ -46,10 +51,10 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
-    const person = persons.find((p) => p.id === id)
+    const person = persons.find((person) => person.id === id)
     if (window.confirm(`Delete ${person.name}?`)) {
       personService.remove(id).then(() => {
-        setPersons(persons.filter((p) => p.id !== id))
+        setPersons(persons.filter((person) => person.id !== id))
       })
       console.log('person deleted!')
     }
