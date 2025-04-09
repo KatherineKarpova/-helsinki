@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { fetchAllData } from './CountriesData'
 import FilteredCountries from './components/FilteredCountries'
 import CountryDataShown from './components/CountryDataShown'

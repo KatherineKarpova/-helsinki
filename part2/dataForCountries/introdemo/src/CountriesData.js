@@ -4,11 +4,11 @@ import axios from 'axios'
 export const fetchAllData = async () => {
   try {
     const response = await axios.get('https://studies.cs.helsinki.fi/restcountries/api/all')
-    console.log('All countries data retrieved');
+    console.log('All countries data retrieved')
 
     // convert the array into an object with common names as keys
     const data = response.data.reduce((acc, country) => {
-      acc[country.name.common] = country; 
+      acc[country.name.common] = country
       return acc
     }, {})
     return data

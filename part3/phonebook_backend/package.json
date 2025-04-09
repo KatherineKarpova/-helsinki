@@ -1,0 +1,24 @@
+{
+  "name": "phonebook_backend",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "phonebook",
+    "backend"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "helsinki"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "UNLICENSED",
+  "author": "Kat Karpova",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
