@@ -43,15 +43,14 @@ const App = () => {
           `Note '${note.content}' was already removed from server`
         )
         setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
         setNotes(notes.filter((n) => n.id !== id))
       })
+    })
   }
 
   const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
-  }
+          setNewNote(event.target.value)
+        }
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 
@@ -81,6 +80,4 @@ const App = () => {
     </div>
   )
 }
-
 export default App
-
