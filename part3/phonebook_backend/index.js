@@ -3,9 +3,16 @@ const morgan = require('morgan')
 const app = express()
 // middleware to parse JSON request bodies
 app.use(express.json())
-app.use(morgan('tiny'))
 
+// create custom token to stringify & log request body
+morgan.token('body', (request) => {
+  return request.body ? JSON.stringify(request.body) : ''
+})
 
+// use morgan with custom token
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
+// dictionary to hold phonebook entries
 let persons = [
     { 
       "id": "1",
